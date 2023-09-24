@@ -1,3 +1,5 @@
+from credentials import SF_ROLE, STORAGE_AWS_ROLE_ARN
+
 create_warehouse_query = """
                          CREATE WAREHOUSE IF NOT EXISTS AIRFLOW_TLC_WH
                          WITH
@@ -125,3 +127,21 @@ create_fact = """
               COMMENT = 'create fact table'
 
               """
+
+
+create_aws_s3_integration = f"""
+                             CREATE STORAGE INTEGRATION IF NOT EXISTS tlc_aws_s3_int
+                             TYPE = EXTERNAL_STAGE
+                             STORAGE_PROVIDER = 'S3'
+                             ENABLED = TRUE
+                             STORAGE_AWS_ROLE_ARN = '{STORAGE_AWS_ROLE_ARN}'
+                             STORAGE_ALLOWED_LOCATIONS = ('s3://nyc-tlc-trip-data')
+                             COMMENT = 'create an aws storage integration for nyc taxi trip data'
+
+                            """
+
+
+grant_permission_to_aws_s3_integration = f"""
+                                          GRANT USAGE ON INTEGRATION tlc_aws_s3_int TO ROLE {SF_ROLE}
+
+                                          """
