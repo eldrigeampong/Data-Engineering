@@ -129,19 +129,134 @@ create_fact = """
               """
 
 
-create_aws_s3_integration = f"""
-                             CREATE STORAGE INTEGRATION IF NOT EXISTS tlc_aws_s3_int
-                             TYPE = EXTERNAL_STAGE
-                             STORAGE_PROVIDER = 'S3'
-                             ENABLED = TRUE
-                             STORAGE_AWS_ROLE_ARN = '{STORAGE_AWS_ROLE_ARN}'
-                             STORAGE_ALLOWED_LOCATIONS = ('s3://nyc-tlc-trip-data')
-                             COMMENT = 'create an aws storage integration for nyc taxi trip data'
+create_storage_integration = f"""
+                              CREATE STORAGE INTEGRATION IF NOT EXISTS airflow_tlc_aws_s3_int
+                              TYPE = EXTERNAL_STAGE
+                              STORAGE_PROVIDER = 'S3'
+                              ENABLED = TRUE
+                              STORAGE_AWS_ROLE_ARN = '{STORAGE_AWS_ROLE_ARN}'
+                              STORAGE_ALLOWED_LOCATIONS = ('s3://nyc-tlc-trip-data/yellow-taxi/')
+                              COMMENT = 'create an aws storage integration for nyc taxi trip data'
+
+                              """
+
+
+grant_integration_access = f"""
+                            GRANT USAGE ON INTEGRATION airflow_tlc_aws_s3_int TO ROLE {SF_ROLE}
 
                             """
 
 
-grant_permission_to_aws_s3_integration = f"""
-                                          GRANT USAGE ON INTEGRATION tlc_aws_s3_int TO ROLE {SF_ROLE}
+create_external_stage = """
+                        CREATE STAGE IF NOT EXISTS airflow_tlc_aws_s3_stage
+                        STORAGE_INTEGRATION = airflow_tlc_aws_s3_int
+                        URL = 's3://nyc-tlc-trip-data/yellow-taxi/'
+                        FILE_FORMAT = (TYPE = 'PARQUET')
+                        COPY_OPTIONS = (ON_ERROR = 'ABORT_STATEMENT')
+                        COMMENT = 'create an aws stage for nyc taxi trip data'
 
-                                          """
+                        """
+
+
+create_passenger_count_pipe = """
+                              CREATE OR REPLACE PIPE passenger_count_dim_pipe
+                              AUTO_INGEST = TRUE
+                              COMMENT = 'Creates a passenger count dimension pipe'
+                              AS
+                              COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.passenger_count_dim
+                              FROM @airflow_tlc_aws_s3_stage/passenger_count_dim
+                              FILE_FORMAT = (TYPE = 'PARQUET')
+                              MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+
+                              """
+
+
+create_trip_distance_pipe = """
+                            CREATE OR REPLACE PIPE trip_distance_dim_pipe
+                            AUTO_INGEST = TRUE
+                            COMMENT = 'Creates a trip distance dimension pipe'
+                            AS
+                            COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.trip_distance_dim
+                            FROM @airflow_tlc_aws_s3_stage/trip_distance_dim
+                            FILE_FORMAT = (TYPE = 'PARQUET')
+                            MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+
+                            """
+
+
+create_pickup_location_pipe = """
+                              CREATE OR REPLACE PIPE pickup_location_dim_pipe
+                              AUTO_INGEST = TRUE
+                              COMMENT = 'Creates a pickup location dimension pipe'
+                              AS
+                              COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.pickup_location_dim
+                              FROM @airflow_tlc_aws_s3_stage/pickup_location_dim
+                              FILE_FORMAT = (TYPE = 'PARQUET')
+                              MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+
+                              """
+
+
+create_dropoff_location_pipe = """
+                               CREATE OR REPLACE PIPE dropoff_location_dim_pipe
+                               AUTO_INGEST = TRUE
+                               COMMENT = 'Creates a dropoff location dimension pipe'
+                               AS
+                               COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.dropoff_location_dim
+                               FROM @airflow_tlc_aws_s3_stage/dropoff_location_dim
+                               FILE_FORMAT = (TYPE = 'PARQUET')
+                               MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                              
+                               """
+
+
+create_datetime_pipe = """
+                       CREATE OR REPLACE PIPE datetime_dim_pipe
+                       AUTO_INGEST = TRUE
+                       COMMENT = 'Creates a datetime dimension pipe'
+                       AS
+                       COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.datetime_dim
+                       FROM @airflow_tlc_aws_s3_stage/datetime_dim
+                       FILE_FORMAT = (TYPE = 'PARQUET')
+                       MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                              
+                       """
+
+
+create_rate_code_pipe = """
+                        CREATE OR REPLACE PIPE rate_code_dim_pipe
+                        AUTO_INGEST = TRUE
+                        COMMENT = 'Creates a rate code dimension pipe'
+                        AS
+                        COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.rate_code_dim
+                        FROM @airflow_tlc_aws_s3_stage/rate_code_dim
+                        FILE_FORMAT = (TYPE = 'PARQUET')
+                        MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                              
+                        """
+
+
+create_payment_type_pipe = """
+                           CREATE OR REPLACE PIPE payment_type_dim_pipe
+                           AUTO_INGEST = TRUE
+                           COMMENT = 'Creates a payment type dimension pipe'
+                           AS
+                           COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.payment_type_dim
+                           FROM @airflow_tlc_aws_s3_stage/payment_type_dim
+                           FILE_FORMAT = (TYPE = 'PARQUET')
+                           MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                              
+                           """
+
+
+create_fact_pipe = """
+                   CREATE OR REPLACE PIPE fact_table_pipe
+                   AUTO_INGEST = TRUE
+                   COMMENT = 'Creates a fact table pipe'
+                   AS
+                   COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.fact_table
+                   FROM @airflow_tlc_aws_s3_stage/fact_table
+                   FILE_FORMAT = (TYPE = 'PARQUET')
+                   MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                              
+                  """
