@@ -1,0 +1,58 @@
+[2023-10-09T17:53:02.687+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: Nyc_Yellow_Taxi.create_fact_table manual__2023-10-09T17:51:30.888679+00:00 [queued]>
+[2023-10-09T17:53:02.700+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: Nyc_Yellow_Taxi.create_fact_table manual__2023-10-09T17:51:30.888679+00:00 [queued]>
+[2023-10-09T17:53:02.701+0000] {taskinstance.py:1359} INFO - Starting attempt 2 of 2
+[2023-10-09T17:53:02.717+0000] {taskinstance.py:1380} INFO - Executing <Task(SnowflakeOperator): create_fact_table> on 2023-10-09 17:51:30.888679+00:00
+[2023-10-09T17:53:02.724+0000] {standard_task_runner.py:57} INFO - Started process 751 to run task
+[2023-10-09T17:53:02.731+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'Nyc_Yellow_Taxi', 'create_fact_table', 'manual__2023-10-09T17:51:30.888679+00:00', '--job-id', '3534', '--raw', '--subdir', 'DAGS_FOLDER/tlc_etl.py', '--cfg-path', '/tmp/tmpqzehc44q']
+[2023-10-09T17:53:02.736+0000] {standard_task_runner.py:85} INFO - Job 3534: Subtask create_fact_table
+[2023-10-09T17:53:02.799+0000] {task_command.py:415} INFO - Running <TaskInstance: Nyc_Yellow_Taxi.create_fact_table manual__2023-10-09T17:51:30.888679+00:00 [running]> on host c41f4f98c0da
+[2023-10-09T17:53:02.929+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='Nyc_Yellow_Taxi' AIRFLOW_CTX_TASK_ID='create_fact_table' AIRFLOW_CTX_EXECUTION_DATE='2023-10-09T17:51:30.888679+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='manual__2023-10-09T17:51:30.888679+00:00'
+[2023-10-09T17:53:02.930+0000] {sql.py:274} INFO - Executing: 
+              CREATE OR REPLACE TABLE fact_table (
+                                                   VendorID INT PRIMARY KEY,
+                                                   datetime_id INT REFERENCES datetime_dim (datetime_id),	
+                                                   passenger_count_id	INT REFERENCES passenger_count_dim (passenger_count_id),
+                                                   trip_distance_id INT REFERENCES trip_distance_dim (trip_distance_id),	
+                                                   pickup_location_id INT REFERENCES pickup_location_dim (pickup_location_id),
+                                                   dropoff_location_id INT REFERENCES dropoff_location_dim (dropoff_location_id),
+                                                   rate_code_id INT REFERENCES rate_code_dim (rate_code_id),
+                                                   payment_type_id INT REFERENCES payment_type_dim (payment_type_id)
+                                                 )
+              STAGE_FILE_FORMAT = (TYPE = 'PARQUET')
+              COMMENT = 'create fact table'
+
+              
+[2023-10-09T17:53:02.947+0000] {base.py:73} INFO - Using connection ID 'snowflake_default' for task execution.
+[2023-10-09T17:53:02.965+0000] {base.py:73} INFO - Using connection ID 'snowflake_default' for task execution.
+[2023-10-09T17:53:02.966+0000] {connection.py:314} INFO - Snowflake Connector for Python Version: 3.1.1, Python Version: 3.8.18, Platform: Linux-5.10.102.1-microsoft-standard-WSL2-x86_64-with-glibc2.2.5
+[2023-10-09T17:53:02.969+0000] {connection.py:1050} INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+[2023-10-09T17:53:02.969+0000] {connection.py:1068} INFO - Setting use_openssl_only mode to False
+[2023-10-09T17:53:03.546+0000] {cursor.py:804} INFO - query: [ALTER SESSION SET autocommit=False]
+[2023-10-09T17:53:03.614+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:53:03.615+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:53:03.616+0000] {sql.py:418} INFO - Running statement: CREATE OR REPLACE TABLE fact_table (
+                                                   VendorID INT PRIMARY KEY,
+                                                   datetime_id INT REFERENCES datetime_dim (datetime_id),	
+                                                   passenger_count_id	INT REFERENCES passenger_count_dim (passenger_count_id),
+                                                   trip_distance_id INT REFERENCES trip_distance_dim (trip_distance_id),	
+                                                   pickup_location_id INT REFERENCES pickup_location_dim (pickup_location_id),
+                                                   dropoff_location_id INT REFERENCES dropoff_location_dim (dropoff_location_id),
+                                                   rate_code_id INT REFERENCES rate_code_dim (rate_code_id),
+                                                   payment_type_id INT REFERENCES payment_type_dim (payment_type_id)
+                                                 )
+              STAGE_FILE_FORMAT = (TYPE = 'PARQUET')
+              COMMENT = 'create fact table', parameters: None
+[2023-10-09T17:53:03.616+0000] {cursor.py:804} INFO - query: [CREATE OR REPLACE TABLE fact_table ( VendorID INT PRIMARY KEY, datetime_id INT R...]
+[2023-10-09T17:53:03.997+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:53:03.998+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:53:03.998+0000] {sql.py:427} INFO - Rows affected: 1
+[2023-10-09T17:53:03.999+0000] {snowflake.py:427} INFO - Rows affected: 1
+[2023-10-09T17:53:03.999+0000] {snowflake.py:428} INFO - Snowflake query id: 01af8991-3202-08cc-0002-3f6a000294fa
+[2023-10-09T17:53:04.000+0000] {cursor.py:804} INFO - query: [COMMIT]
+[2023-10-09T17:53:04.057+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:53:04.058+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:53:04.059+0000] {connection.py:640} INFO - closed
+[2023-10-09T17:53:04.087+0000] {connection.py:646} INFO - No async queries seem to be running, deleting session
+[2023-10-09T17:53:04.205+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=Nyc_Yellow_Taxi, task_id=create_fact_table, execution_date=20231009T175130, start_date=20231009T175302, end_date=20231009T175304
+[2023-10-09T17:53:04.228+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2023-10-09T17:53:04.403+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

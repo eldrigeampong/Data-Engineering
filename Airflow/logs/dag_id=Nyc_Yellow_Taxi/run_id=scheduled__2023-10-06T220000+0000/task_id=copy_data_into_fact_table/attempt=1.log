@@ -1,0 +1,50 @@
+[2023-10-09T17:44:00.279+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: Nyc_Yellow_Taxi.copy_data_into_fact_table scheduled__2023-10-06T22:00:00+00:00 [queued]>
+[2023-10-09T17:44:00.331+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: Nyc_Yellow_Taxi.copy_data_into_fact_table scheduled__2023-10-06T22:00:00+00:00 [queued]>
+[2023-10-09T17:44:00.334+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2023-10-09T17:44:00.406+0000] {taskinstance.py:1380} INFO - Executing <Task(SnowflakeOperator): copy_data_into_fact_table> on 2023-10-06 22:00:00+00:00
+[2023-10-09T17:44:00.448+0000] {standard_task_runner.py:57} INFO - Started process 291 to run task
+[2023-10-09T17:44:00.467+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'Nyc_Yellow_Taxi', 'copy_data_into_fact_table', 'scheduled__2023-10-06T22:00:00+00:00', '--job-id', '3486', '--raw', '--subdir', 'DAGS_FOLDER/tlc_etl.py', '--cfg-path', '/tmp/tmp_w3deitk']
+[2023-10-09T17:44:00.481+0000] {standard_task_runner.py:85} INFO - Job 3486: Subtask copy_data_into_fact_table
+[2023-10-09T17:44:00.670+0000] {task_command.py:415} INFO - Running <TaskInstance: Nyc_Yellow_Taxi.copy_data_into_fact_table scheduled__2023-10-06T22:00:00+00:00 [running]> on host c41f4f98c0da
+[2023-10-09T17:44:00.979+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='Nyc_Yellow_Taxi' AIRFLOW_CTX_TASK_ID='copy_data_into_fact_table' AIRFLOW_CTX_EXECUTION_DATE='2023-10-06T22:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2023-10-06T22:00:00+00:00'
+[2023-10-09T17:44:00.981+0000] {sql.py:274} INFO - Executing: 
+                   CREATE OR REPLACE PIPE fact_table_pipe
+                   AUTO_INGEST = TRUE
+                   COMMENT = 'Creates a fact table pipe'
+                   AS
+                   COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.fact_table
+                   FROM @***_tlc_aws_s3_stage/fact_table
+                   FILE_FORMAT = (TYPE = 'PARQUET')
+                   MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                              
+                  
+[2023-10-09T17:44:01.005+0000] {base.py:73} INFO - Using connection ID 'snowflake_default' for task execution.
+[2023-10-09T17:44:01.029+0000] {base.py:73} INFO - Using connection ID 'snowflake_default' for task execution.
+[2023-10-09T17:44:01.031+0000] {connection.py:314} INFO - Snowflake Connector for Python Version: 3.1.1, Python Version: 3.8.18, Platform: Linux-5.10.102.1-microsoft-standard-WSL2-x86_64-with-glibc2.2.5
+[2023-10-09T17:44:01.033+0000] {connection.py:1050} INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+[2023-10-09T17:44:01.034+0000] {connection.py:1068} INFO - Setting use_openssl_only mode to False
+[2023-10-09T17:44:01.934+0000] {cursor.py:804} INFO - query: [ALTER SESSION SET autocommit=False]
+[2023-10-09T17:44:02.027+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:44:02.029+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:44:02.030+0000] {sql.py:418} INFO - Running statement: CREATE OR REPLACE PIPE fact_table_pipe
+                   AUTO_INGEST = TRUE
+                   COMMENT = 'Creates a fact table pipe'
+                   AS
+                   COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.fact_table
+                   FROM @***_tlc_aws_s3_stage/fact_table
+                   FILE_FORMAT = (TYPE = 'PARQUET')
+                   MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE, parameters: None
+[2023-10-09T17:44:02.030+0000] {cursor.py:804} INFO - query: [CREATE OR REPLACE PIPE fact_table_pipe AUTO_INGEST = TRUE COMMENT = 'Creates a f...]
+[2023-10-09T17:44:02.443+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:44:02.444+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:44:02.465+0000] {sql.py:427} INFO - Rows affected: 1
+[2023-10-09T17:44:02.466+0000] {snowflake.py:427} INFO - Rows affected: 1
+[2023-10-09T17:44:02.467+0000] {snowflake.py:428} INFO - Snowflake query id: 01af8988-3202-08cc-0002-3f6a00029436
+[2023-10-09T17:44:02.467+0000] {cursor.py:804} INFO - query: [COMMIT]
+[2023-10-09T17:44:02.522+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:44:02.523+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:44:02.523+0000] {connection.py:640} INFO - closed
+[2023-10-09T17:44:02.552+0000] {connection.py:646} INFO - No async queries seem to be running, deleting session
+[2023-10-09T17:44:02.631+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=Nyc_Yellow_Taxi, task_id=copy_data_into_fact_table, execution_date=20231006T220000, start_date=20231009T174400, end_date=20231009T174402
+[2023-10-09T17:44:02.709+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2023-10-09T17:44:02.787+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

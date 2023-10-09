@@ -1,0 +1,50 @@
+[2023-10-09T17:51:54.020+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: Nyc_Yellow_Taxi.copy_data_into_trip_distance_table manual__2023-10-09T17:51:30.888679+00:00 [queued]>
+[2023-10-09T17:51:54.036+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: Nyc_Yellow_Taxi.copy_data_into_trip_distance_table manual__2023-10-09T17:51:30.888679+00:00 [queued]>
+[2023-10-09T17:51:54.037+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2023-10-09T17:51:54.059+0000] {taskinstance.py:1380} INFO - Executing <Task(SnowflakeOperator): copy_data_into_trip_distance_table> on 2023-10-09 17:51:30.888679+00:00
+[2023-10-09T17:51:54.066+0000] {standard_task_runner.py:57} INFO - Started process 672 to run task
+[2023-10-09T17:51:54.072+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'Nyc_Yellow_Taxi', 'copy_data_into_trip_distance_table', 'manual__2023-10-09T17:51:30.888679+00:00', '--job-id', '3527', '--raw', '--subdir', 'DAGS_FOLDER/tlc_etl.py', '--cfg-path', '/tmp/tmptxev6r_y']
+[2023-10-09T17:51:54.077+0000] {standard_task_runner.py:85} INFO - Job 3527: Subtask copy_data_into_trip_distance_table
+[2023-10-09T17:51:54.147+0000] {task_command.py:415} INFO - Running <TaskInstance: Nyc_Yellow_Taxi.copy_data_into_trip_distance_table manual__2023-10-09T17:51:30.888679+00:00 [running]> on host c41f4f98c0da
+[2023-10-09T17:51:54.255+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='Nyc_Yellow_Taxi' AIRFLOW_CTX_TASK_ID='copy_data_into_trip_distance_table' AIRFLOW_CTX_EXECUTION_DATE='2023-10-09T17:51:30.888679+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2023-10-09T17:51:30.888679+00:00'
+[2023-10-09T17:51:54.256+0000] {sql.py:274} INFO - Executing: 
+                            CREATE OR REPLACE PIPE trip_distance_dim_pipe
+                            AUTO_INGEST = TRUE
+                            COMMENT = 'Creates a trip distance dimension pipe'
+                            AS
+                            COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.trip_distance_dim
+                            FROM @***_tlc_aws_s3_stage/trip_distance_dim
+                            FILE_FORMAT = (TYPE = 'PARQUET')
+                            MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+
+                            
+[2023-10-09T17:51:54.269+0000] {base.py:73} INFO - Using connection ID 'snowflake_default' for task execution.
+[2023-10-09T17:51:54.282+0000] {base.py:73} INFO - Using connection ID 'snowflake_default' for task execution.
+[2023-10-09T17:51:54.283+0000] {connection.py:314} INFO - Snowflake Connector for Python Version: 3.1.1, Python Version: 3.8.18, Platform: Linux-5.10.102.1-microsoft-standard-WSL2-x86_64-with-glibc2.2.5
+[2023-10-09T17:51:54.284+0000] {connection.py:1050} INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+[2023-10-09T17:51:54.285+0000] {connection.py:1068} INFO - Setting use_openssl_only mode to False
+[2023-10-09T17:51:54.824+0000] {cursor.py:804} INFO - query: [ALTER SESSION SET autocommit=False]
+[2023-10-09T17:51:54.924+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:51:54.926+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:51:54.928+0000] {sql.py:418} INFO - Running statement: CREATE OR REPLACE PIPE trip_distance_dim_pipe
+                            AUTO_INGEST = TRUE
+                            COMMENT = 'Creates a trip distance dimension pipe'
+                            AS
+                            COPY INTO AIRFLOW_NYC_TLC.Airflow_Yellow_Taxi.trip_distance_dim
+                            FROM @***_tlc_aws_s3_stage/trip_distance_dim
+                            FILE_FORMAT = (TYPE = 'PARQUET')
+                            MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE, parameters: None
+[2023-10-09T17:51:54.930+0000] {cursor.py:804} INFO - query: [CREATE OR REPLACE PIPE trip_distance_dim_pipe AUTO_INGEST = TRUE COMMENT = 'Crea...]
+[2023-10-09T17:51:55.874+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:51:55.875+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:51:55.875+0000] {sql.py:427} INFO - Rows affected: 1
+[2023-10-09T17:51:55.876+0000] {snowflake.py:427} INFO - Rows affected: 1
+[2023-10-09T17:51:55.876+0000] {snowflake.py:428} INFO - Snowflake query id: 01af898f-3202-08cc-0002-3f6a000294e2
+[2023-10-09T17:51:55.877+0000] {cursor.py:804} INFO - query: [COMMIT]
+[2023-10-09T17:51:55.933+0000] {cursor.py:817} INFO - query execution done
+[2023-10-09T17:51:55.933+0000] {cursor.py:959} INFO - Number of results in first chunk: 1
+[2023-10-09T17:51:55.934+0000] {connection.py:640} INFO - closed
+[2023-10-09T17:51:55.960+0000] {connection.py:646} INFO - No async queries seem to be running, deleting session
+[2023-10-09T17:51:56.019+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=Nyc_Yellow_Taxi, task_id=copy_data_into_trip_distance_table, execution_date=20231009T175130, start_date=20231009T175154, end_date=20231009T175156
+[2023-10-09T17:51:56.054+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2023-10-09T17:51:56.113+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check
